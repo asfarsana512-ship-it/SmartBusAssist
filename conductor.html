@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Conductor Panel</title>
-<link rel="stylesheet" href="style.css">
+    <title>Conductor Panel</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body style="font-family: Arial; text-align: center; padding-top: 40px;">
 
-<h1>Conductor Panel</h1>
+    <h1>👨‍✈️ Conductor Panel</h1>
 
-<select id="stopSelect"></select>
-<button onclick="addPassenger()">Add Passenger</button>
+    <div class="panel" style="display: inline-block; text-align: left; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <label>Next Stop</label><br>
+        <select id="stop" style="width: 100%; padding: 8px;">
+            <option value="Pala">Pala</option>
+            <option value="Kottayam">Kottayam</option>
+            <option value="Ettumanoor">Ettumanoor</option>
+            <option value="Kuravilangad">Kuravilangad</option>
+            <option value="Changanassery">Changanassery</option>
+        </select><br><br>
 
-<p id="status"></p>
+        <label>Passengers Boarding</label><br>
+        <input id="board" type="number" placeholder="0" style="width: 95%; padding: 8px;"><br><br>
 
-<script src="firebase.js"></script>
-<script src="script.js"></script>
+        <label>Passengers Dropping</label><br>
+        <input id="drop" type="number" placeholder="0" style="width: 95%; padding: 8px;"><br><br>
 
+        <button onclick="submitData()" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Update Driver
+        </button>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,22 +1,47 @@
-body{
-font-family: Arial;
-text-align:center;
-background:#f2f2f2;
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
 }
 
-h1{
-color:#333;
-}
-select,button{
-padding:10px;
-margin:10px;
-font-size:16px;
+h1 { color: #1c1e21; }
+
+.panel {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 320px;
 }
 
-h2{
-color:#0077cc;
+select, input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box; /* Crucial for alignment */
 }
 
-h3{
-color:#009933;
+button {
+    width: 100%;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#display {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 3px solid #0077cc;
 }

@@ -1,63 +1,66 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  set,
-  onValue
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-/* FIREBASE CONFIG */
+// --- PASTE YOUR ACTUAL CONFIG HERE ---
 const firebaseConfig = {
   apiKey: "AIzaSyC3o16hORHSuBeFwXTdomAM-753Sq0au8A",
   authDomain: "smartbusassist.firebaseapp.com",
+  databaseURL: "https://smartbusassist-default-rtdb.firebaseio.com/",
   projectId: "smartbusassist",
   storageBucket: "smartbusassist.firebasestorage.app",
   messagingSenderId: "70875036469",
-  appId: "1:70875036469:web:1d491fc14d9418ab4e2a7c",
-  databaseURL: "https://smartbusassist-default-rtdb.firebaseio.com/"
+  appId: "1:70875036469:web:1d491fc14d9418ab4e2a7c"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* CONDUCTOR SUBMIT */
-window.submitPassengers = function () {
-  const stop = document.getElementById("stop").value;
-  const board = document.getElementById("board").value;
-  const drop = document.getElementById("drop").value;
+// --- CONDUCTOR LOGIC ---
+window.submitData = function() {
+    console.log("Submit button clicked!"); // Check if this shows in Console
+    const nextStop = document.getElementById("stop").value;
+    const boarding = document.getElementById("board").value || 0;
+    const dropping = document.getElementById("drop").value || 0;
 
-  set(ref(db, "busData"), {
-    nextStop: stop,
-    boarding: board,
-    dropping: drop
-  });
-
-  alert("Data Sent to Driver Panel");
+    // We use "busData" as our shared folder name
+    set(ref(db, "busData"), {
+        stopName: nextStop,
+        boarding: boarding,
+        dropping: dropping
+    }).then(() => {
+        console.log("Data successfully sent to Firebase!");
+        alert("Driver Notified!");
+    }).catch((error) => {
+        console.error("Firebase Error:", error);
+    });
 };
 
-/* DRIVER LIVE UPDATE */
-const display = document.getElementById("display");
+// --- DRIVER LOGIC ---
+const displayBox = document.getElementById("display");
 
-if (display) {
-  const dataRef = ref(db, "busData");
-
-  onValue(dataRef, (snapshot) => {
-    const data = snapshot.val();
-
-    if (data) {
-      display.innerHTML = `
-        Next Stop: ${data.nextStop}<br>
-        Boarding: ${data.boarding}<br>
-        Dropping: ${data.dropping}
-      `;
-
-      speakStop(data.nextStop);
-    }
-  });
+// This runs only on the Driver page
+if (displayBox) {
+    console.log("Driver page detected, listening for updates...");
+    
+    // We listen to the EXACT SAME folder: "busData"
+    onValue(ref(db, "busData"), (snapshot) => {
+        const data = snapshot.val();
+        console.log("New data received from Firebase:", data);
+        
+        if (data) {
+            displayBox.innerHTML = `
+                <h2 style="color: #007bff; margin: 0;">Next: ${data.stopName}</h2>
+                <hr>
+                <p style="font-size: 20px;">Boarding: <b style="color:green">${data.boarding}</b></p>
+                <p style="font-size: 20px;">Deboarding: <b style="color:red">${data.dropping}</b></p>
+            `;
+            announceStop(data.stopName);
+        }
+    });
 }
 
-/* VOICE ANNOUNCEMENT */
-function speakStop(stop) {
-  const msg = new SpeechSynthesisUtterance("Next stop is " + stop);
-  speechSynthesis.speak(msg);
+function announceStop(stopName) {
+    window.speechSynthesis.cancel();
+    const msg = new SpeechSynthesisUtterance("Next stop is " + stopName);
+    window.speechSynthesis.speak(msg);
 }
