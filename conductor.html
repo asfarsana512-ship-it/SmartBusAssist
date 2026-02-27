@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Conductor Panel</title>
+    <title>Conductor - Ticketing</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="font-family: Arial; text-align: center; padding-top: 40px;">
-
-    <h1>👨‍✈️ Conductor Panel</h1>
-
-    <div class="panel" style="display: inline-block; text-align: left; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-        <label>Next Stop</label><br>
-        <select id="stop" style="width: 100%; padding: 8px;">
+<body>
+    <h1>👨‍✈️ Conductor Ticketing</h1>
+    <div class="panel">
+        <label>Passenger Destination:</label><br>
+        <select id="passengerDest">
             <option value="Pala">Pala</option>
             <option value="Kottayam">Kottayam</option>
             <option value="Ettumanoor">Ettumanoor</option>
@@ -18,25 +16,21 @@
             <option value="Changanassery">Changanassery</option>
         </select><br><br>
 
-        <label>Passengers Boarding</label><br>
-        <input id="board" type="number" placeholder="0" style="width: 95%; padding: 8px;"><br><br>
-
-        <label>Passengers Dropping</label><br>
-        <input id="drop" type="number" placeholder="0" style="width: 95%; padding: 8px;"><br><br>
-
-        <button onclick="submitData()" style="width: 100%; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-            Update Driver
-        </button>
-
-        <button onclick="resetData()"
-        style="padding: 10px 20px;
-        background-color :#6c757d; color:white;
-        border:none;
-        border-radius:5px;cursor:pointer;margin-left:10px;">
-        Clear Display
-    
-    </button>
-
+        <button onclick="bookPassenger()">Issue Ticket (+1)</button>
+        
+        <hr style="margin: 20px 0;">
+        
+        <label>Current Bus Location (Update Stop):</label><br>
+        <select id="currentBusStop">
+            <option value="Pala">Pala</option>
+            <option value="Kottayam">Kottayam</option>
+            <option value="Ettumanoor">Ettumanoor</option>
+            <option value="Kuravilangad">Kuravilangad</option>
+            <option value="Changanassery">Changanassery</option>
+        </select><br><br>
+        <button onclick="updateLocation()" style="background-color: #28a745;">Arrived at Stop</button>
+        
+        <button onclick="resetTrip()" style="background-color: #dc3545; margin-top: 10px;">Reset Trip</button>
     </div>
 
     <script type="module" src="script.js"></script>

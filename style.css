@@ -1,47 +1,121 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary: #38bdf8;
+    --success: #4ade80;
+    --danger: #f87171;
+    --text: #f8fafc;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
+    background-color: var(--bg-color);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-h1 { color: #1c1e21; }
+h1 {
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
 
 .panel {
-    background: white;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 320px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Conductor Inputs */
+label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    display: block;
 }
 
 select, input {
     width: 100%;
     padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box; /* Crucial for alignment */
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
+/* Buttons */
 button {
     width: 100%;
-    background-color: #0077cc;
-    color: white;
+    padding: 16px;
+    border-radius: 12px;
     border: none;
-    padding: 12px;
-    font-weight: bold;
-    border-radius: 6px;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
-    margin-top: 10px;
+    transition: all 0.2s;
+    background: var(--primary);
+    color: var(--bg-color);
+    margin-bottom: 10px;
 }
 
-#display {
-    min-height: 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border: 3px solid #0077cc;
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary { background: #475569; color: white; }
+.btn-danger { background: var(--danger); color: white; }
+
+/* Driver Dashboard Specifics */
+.stop-highlight {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 10px 0;
+    color: var(--text);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.boarding-bg { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--success); color: var(--success); }
+.danger-bg { background: rgba(248, 113, 113, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+
+#liveClock {
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+}
+
+.stop-highlight {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
