@@ -1,71 +1,63 @@
-const stops = [
-"Pala",
-"Ramapuram",
-"Kuravilangad",
-"Ettumanoor",
-"Kottayam"
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-let passengers = [];
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyC3o16hORHSuBeFwXTdomAM-753Sq0au8A",
+  authDomain: "smartbusassist.firebaseapp.com",
+  projectId: "smartbusassist",
+  storageBucket: "smartbusassist.firebasestorage.app",
+  messagingSenderId: "70875036469",
+  appId: "1:70875036469:web:1d491fc14d9418ab4e2a7c",
+  databaseURL: "https://smartbusassist-default-rtdb.firebaseio.com/"
+};
 
-const dropdown = document.getElementById("stopSelect");
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-if(dropdown){
-stops.forEach(stop=>{
-let option=document.createElement("option");
-option.value=stop;
-option.textContent=stop;
-dropdown.appendChild(option);
-});
+/* CONDUCTOR SUBMIT */
+window.submitPassengers = function () {
+  const stop = document.getElementById("stop").value;
+  const board = document.getElementById("board").value;
+  const drop = document.getElementById("drop").value;
+
+  set(ref(db, "busData"), {
+    nextStop: stop,
+    boarding: board,
+    dropping: drop
+  });
+
+  alert("Data Sent to Driver Panel");
+};
+
+/* DRIVER LIVE UPDATE */
+const display = document.getElementById("display");
+
+if (display) {
+  const dataRef = ref(db, "busData");
+
+  onValue(dataRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if (data) {
+      display.innerHTML = `
+        Next Stop: ${data.nextStop}<br>
+        Boarding: ${data.boarding}<br>
+        Dropping: ${data.dropping}
+      `;
+
+      speakStop(data.nextStop);
+    }
+  });
 }
 
-function addPassenger(){
-
-let selectedStop = dropdown.value;
-
-passengers.push({
-stop:selectedStop
-});
-
-document.getElementById("status").innerText =
-"Passenger added for "+selectedStop+
-" | Total passengers: "+passengers.length;
-
-console.log(passengers);
-}
-let currentStopIndex = 0;
-
-function updateDriver(){
-
-let nextStop = stops[currentStopIndex];
-
-let count = passengers.filter(p=>p.stop===nextStop).length;
-
-let stopDisplay = document.getElementById("nextStop");
-let countDisplay = document.getElementById("count");
-
-if(stopDisplay){
-stopDisplay.innerText = "Next Stop: "+nextStop;
-countDisplay.innerText = "Passengers Getting Down: "+count;
-}
-announceStop(nextStop);
-currentStopIndex++;
-
-if(currentStopIndex>=stops.length){
-currentStopIndex=0;
-}
-}
-
-setInterval(updateDriver,8000);
-function announceStop(stop){
-
-let speech = new SpeechSynthesisUtterance();
-
-speech.text = "Next stop "+stop+". Passengers please get ready.";
-
-speech.volume = 1;
-speech.rate = 1;
-speech.pitch = 1;
-
-speechSynthesis.speak(speech);
+/* VOICE ANNOUNCEMENT */
+function speakStop(stop) {
+  const msg = new SpeechSynthesisUtterance("Next stop is " + stop);
+  speechSynthesis.speak(msg);
 }

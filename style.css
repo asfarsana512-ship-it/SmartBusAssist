@@ -7,3 +7,16 @@ background:#f2f2f2;
 h1{
 color:#333;
 }
+select,button{
+padding:10px;
+margin:10px;
+font-size:16px;
+}
+
+h2{
+color:#0077cc;
+}
+
+h3{
+color:#009933;
+}
