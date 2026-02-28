@@ -1,7 +1,16 @@
 # SmartBusAssist 🚌 
 
 **SmartBusAssist** is a cloud-synchronized transit ecosystem developed for **Tink-Her-Hack**. It bridges the communication gap between bus conductors and drivers while providing automated, localized audio alerts for passengers.
+
+
+
+
+
 **Team Name** : ORBIT
+
+
+
+
 **Team Members** : Farsana A S  Mar Athanasius College of Engineering
 **Hosted Project Link** :https://asfarsana512-ship-it.github.io/SmartBusAssist/
 ---
