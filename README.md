@@ -71,10 +71,7 @@ The mobile-responsive interface used by the conductor. It allows for one-tap tic
 ---
 
 ## 🚀 Live Demo
-
-https://vscode.dev/github/asfarsana512-ship-it/SmartBusAssist/blob/main/demo%20Video%20webapp%202026-02-28%20at%209.05.18%20AM.mp4
-
----
+https://drive.google.com/file/d/1uMApQpqWZqkbCCpIFswCsl_qzV_AkvS_/view?usp=drive_link
 
 
 
