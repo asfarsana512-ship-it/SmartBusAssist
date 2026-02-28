@@ -33,6 +33,7 @@ Our system digitizes the passenger manifest in real-time. By syncing the conduct
 - **Localized Accessibility:** Voice alerts are delivered in **Malayalam** (`ml-IN`) for inclusive transit.
 - **Dynamic Sync:** Sub-second synchronization ensures the driver knows exactly who is getting off at the next stop.
 
+
 🛠 Technical Details
 Technologies & Components Used
 For Software:
@@ -47,17 +48,23 @@ Git & GitHub: For version control and collaborative workflow.
 Firebase Console: For database management and monitoring live traffic.
 
 
+## ✨ Key Features
+- **Real-Time Manifest:** Sub-second synchronization using Firebase Realtime Database.
+- **Predictive Alerts:** Automated $n-1$ logic warns passengers one stop early.
+- **Localized Accessibility:** Voice alerts in **Malayalam** (`ml-IN`) for inclusive transit.
+- **Auto-Clear Logic:** Intelligent 15-second delay before clearing deboarded passenger counts.
+- **Geographic Focus:** Optimized for the Pala-Cherpunkal route.
+
+
 ##Project Screenshots
 1. Driver Smart-Dashboard
 The main interface for the bus driver. It displays the current location in large, high-visibility text and uses a Live Countdown for passengers deboarding at the current stop. It also shows the Prepare Warning for the upcoming stop based on the N-1 logic.
 <img width="1446" height="957" alt="image" src="https://github.com/user-attachments/assets/a08eac07-d2e8-462e-9bc5-eafa053f869d" />
 
-3. Conductor Ticketing & Control Panel
+2. Conductor Ticketing & Control Panel
 The mobile-responsive interface used by the conductor. It allows for one-tap ticket issuance to specific destinations and a manual location update toggle that synchronizes instantly with the cloud database
 <img width="1622" height="1018" alt="image" src="https://github.com/user-attachments/assets/6ae6be3b-c244-46b7-bc63-da3b89e27fd3" />
 .
-5. Real-Time Cloud Synchronization (Firebase)
-A view of the Firebase Realtime Database console showing sub-second data updates. This demonstrates how passenger counts and location coordinates are mirrored across devices without page refreshes, ensuring the driver always has the latest manifest.
 
 
 .
@@ -69,12 +76,7 @@ https://vscode.dev/github/asfarsana512-ship-it/SmartBusAssist/blob/main/demo%20V
 
 ---
 
-## ✨ Key Features
-- **Real-Time Manifest:** Sub-second synchronization using Firebase Realtime Database.
-- **Predictive Alerts:** Automated $n-1$ logic warns passengers one stop early.
-- **Localized Accessibility:** Voice alerts in **Malayalam** (`ml-IN`) for inclusive transit.
-- **Auto-Clear Logic:** Intelligent 15-second delay before clearing deboarded passenger counts.
-- **Geographic Focus:** Optimized for the Pala-Cherpunkal route.
+
 
 
 
@@ -95,3 +97,12 @@ https://vscode.dev/github/asfarsana512-ship-it/SmartBusAssist/blob/main/demo%20V
 ├── style.css           # Modern Fleet UI Styles
 ├── script.js           # Firebase Logic & Voice Engine
 └── README.md           # Project Documentation
+
+
+
+**AI Tools Used**
+**Tools Used**: google gemini
+**purpose**:To generate codes
+**Percentage of AI generated code**:95%
+**Human Contributions**:Integration and testing
+                         Design and planning 
