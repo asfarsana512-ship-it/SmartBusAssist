@@ -85,6 +85,16 @@ https://drive.google.com/file/d/1uMApQpqWZqkbCCpIFswCsl_qzV_AkvS_/view?usp=drive
 - **Voice Engine:** Web Speech API
 - **Version Control:** Git & GitHub
 
+
+**Backend**
+The Database (Firebase): This is where all your data lives. When the conductor clicks a button, the data is sent to Google's servers (the backend).
+
+The API/SDK: You used the Firebase JavaScript SDK to communicate with that backend.
+
+Real-time Synchronization: This is the most "backend-heavy" part. The Firebase backend "pushes" updates to the Driver Dashboard the millisecond they happen.
+
+NoSQL Structure: Your data is stored in a JSON-like tree format, which is a modern backend database approach.
+
 ---
 
 ## 📂 Repository Structure
