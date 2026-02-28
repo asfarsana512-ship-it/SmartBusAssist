@@ -14,109 +14,102 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const route = ["Pala", "Kottayam", "Ettumanoor", "Kuravilangad", "Changanassery"];
-
-// --- LIVE CLOCK LOGIC ---
-function updateClock() {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const clockElement = document.getElementById('liveClock');
-    if (clockElement) clockElement.innerText = timeString;
-}
-setInterval(updateClock, 1000);
+// EXACT SEQUENCE FOR N-1 LOGIC
+const route = ["Pala", "Lalam Junction", "Puliyaannoor", "Mutholy", "Cherpunkal"];
 
 // --- CONDUCTOR ACTIONS ---
 window.bookPassenger = function() {
     const dest = document.getElementById("passengerDest").value;
     update(ref(db, 'busData/destinations'), { [dest]: increment(1) });
-    alert("Ticket Issued for " + dest);
 };
 
 window.updateLocation = function() {
-    const currentLoc = document.getElementById("currentBusStop").value;
-    set(ref(db, 'busData/currentLocation'), currentLoc);
+    const loc = document.getElementById("currentBusStop").value;
+    // 1. Update Current Location
+    update(ref(db, 'busData'), { currentLocation: loc }).then(() => {
+        // 2. WAIT 15 SECONDS THEN CLEAR (Demo Visibility)
+        setTimeout(() => {
+            set(ref(db, `busData/destinations/${loc}`), 0);
+        }, 15000);
+    });
 };
 
 window.resetTrip = function() {
-    if(confirm("Start new trip? All passenger data will be wiped.")) {
+    if(confirm("Wipe all trip data?")) {
         set(ref(db, 'busData'), {
             currentLocation: "Starting",
-            destinations: { Pala: 0, Kottayam: 0, Ettumanoor: 0, Kuravilangad: 0, Changanassery: 0 }
-        });
+            destinations: { "Pala": 0, "Lalam Junction": 0, "Puliyaannoor": 0, "Mutholy": 0, "Cherpunkal": 0 }
+        }).then(() => location.reload());
     }
 };
 
-// --- DRIVER DASHBOARD LOGIC ---
+// --- DRIVER DISPLAY & VOICE ---
 const displayBox = document.getElementById("display");
+let lastStop = "";
 
 if (displayBox) {
     onValue(ref(db, "busData"), (snapshot) => {
         const data = snapshot.val();
-        if (data) {
-            const currentStop = data.currentLocation || "Starting";
-            const allDestinations = data.destinations || {};
-            const leaveNowCount = allDestinations[currentStop] || 0;
+        if (!data) return;
 
-            const currentIndex = route.indexOf(currentStop);
-            const nextStopName = route[currentIndex + 1] || "End of Route";
-            const leaveNextCount = allDestinations[nextStopName] || 0;
+        const curr = data.currentLocation || "Starting";
+        const dests = data.destinations || {};
+        const leaveNow = dests[curr] || 0;
 
-            // Generate Route Progress Bar
-            const progressBar = route.map((s, idx) => {
-                let color = idx <= currentIndex ? 'var(--success)' : '#475569';
-                let weight = s === currentStop ? '800' : '400';
-                return `<span style="color: ${color}; font-weight: ${weight}; font-size: 0.7rem;">${s.toUpperCase()}</span>`;
-            }).join(' <span style="color:#475569">→</span> ');
+        const idx = route.indexOf(curr);
+        const next = route[idx + 1] || "Destination Reached";
+        const leaveNext = dests[next] || 0;
 
-            displayBox.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <label>KERALA STATE TRANSIT</label>
-                    <div id="liveClock" style="font-weight: bold; color: var(--primary);">00:00:00</div>
+        displayBox.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label>PALA-CHERPUNKAL</label>
+                <div id="liveClock"></div>
+            </div>
+            <div class="stop-highlight">${curr}</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card danger-bg">
+                    <label>ഇറങ്ങേണ്ടവർ (NOW)</label>
+                    <div style="font-size:3rem; font-weight:800;">${leaveNow}</div>
                 </div>
-
-                <label>CURRENT STATION</label>
-                <div class="stop-highlight">${currentStop}</div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card danger-bg">
-                        <label style="color: var(--danger)">DEBOARDING</label>
-                        <div style="font-size: 3rem; font-weight: 800;">${leaveNowCount}</div>
-                    </div>
-                    <div class="stat-card" style="background: rgba(255,255,255,0.05); border: 1px solid #475569;">
-                        <label>BUS ID</label>
-                        <div style="font-size: 1.2rem; font-weight: 700; margin-top:10px;">KL-15-7087</div>
-                    </div>
+                <div class="stat-card boarding-bg">
+                    <label>അടുത്ത സ്റ്റോപ്പ്</label>
+                    <div style="font-size:1.1rem; font-weight:700; margin-top:5px;">${next}</div>
                 </div>
+            </div>
 
-                <div style="margin-top: 25px; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 16px; border-left: 4px solid var(--primary);">
-                    <label>N-1 PREPARE WARNING</label>
-                    <div style="font-size: 1.2rem; font-weight: 700;">Next Stop: ${nextStopName}</div>
-                    <div style="color: var(--primary); font-size: 0.9rem;">${leaveNextCount} Passengers need to deboard</div>
-                </div>
+            <div style="margin-top:15px; padding:15px; background:rgba(56, 189, 248, 0.1); border-radius:12px; border-left:4px solid var(--primary);">
+                <label>PREPARE ALERT</label>
+                <strong>${next}</strong>: ${leaveNext} Passengers
+            </div>
+        `;
 
-                <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #334155;">
-                    <label style="margin-bottom:10px;">ROUTE PROGRESS</label>
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 5px;">
-                        ${progressBar}
-                    </div>
-                </div>
-            `;
-
-            if (currentStop !== "Starting") {
-                announce(currentStop, leaveNowCount, nextStopName, leaveNextCount);
-            }
+        if (curr !== "Starting" && curr !== lastStop) {
+            announce(curr, leaveNow, next, leaveNext);
+            lastStop = curr;
         }
     });
 }
 
-function announce(curr, currCount, next, nextCount) {
+function announce(curr, cCount, next, nCount) {
     window.speechSynthesis.cancel();
-    let message = `Now at ${curr}. `;
-    if (currCount > 0) message += `${currCount} passengers please exit. `;
-    if (next !== "End of Route" && nextCount > 0) {
-        message += ` Prepare for ${next}. ${nextCount} passengers deboarding next.`;
+    const ml = window.speechSynthesis.getVoices().find(v => v.lang.includes('ml'));
+    let msg = new SpeechSynthesisUtterance();
+
+    let text = `ഇപ്പോൾ ${curr} എത്തിയിരിക്കുന്നു. `;
+    if (cCount > 0) text += `${cCount} യാത്രക്കാർ ദയവായി ഇറങ്ങുക. `;
+    if (next !== "Destination Reached" && nCount > 0) {
+        text += ` അടുത്ത സ്റ്റോപ്പ് ${next} ആണ്. ${nCount} യാത്രക്കാർ തയ്യാറെടുക്കുക.`;
     }
-    const speech = new SpeechSynthesisUtterance(message);
-    speech.rate = 0.95;
-    window.speechSynthesis.speak(speech);
+
+    if (ml) { msg.lang = 'ml-IN'; msg.voice = ml; }
+    else { msg.text = `Arrived at ${curr}. Next stop ${next}.`; msg.lang = 'en-IN'; }
+    
+    msg.rate = 0.85;
+    window.speechSynthesis.speak(msg);
 }
+
+setInterval(() => {
+    const c = document.getElementById('liveClock');
+    if(c) c.innerText = new Date().toLocaleTimeString();
+}, 1000);
